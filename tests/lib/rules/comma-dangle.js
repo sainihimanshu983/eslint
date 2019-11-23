@@ -19,8 +19,7 @@ const path = require("path"),
 
 /**
  * Gets the path to the parser of the given name.
- *
- * @param {string} name - The name of a parser to get.
+ * @param {string} name The name of a parser to get.
  * @returns {string} The path to the specified parser.
  */
 function parser(name) {
@@ -236,31 +235,100 @@ ruleTester.run("comma-dangle", rule, {
             options: ["only-multiline"],
             parserOptions: { ecmaVersion: 6, sourceType: "module" }
         },
-
-
-        // trailing comma in functions -- ignore by default
         {
-            code: "function foo(a,) {}",
-            options: ["never"],
-            parserOptions: { ecmaVersion: 8 }
+            code: "function foo(a) {}",
+            options: ["always"]
         },
         {
-            code: "foo(a,)",
-            options: ["never"],
-            parserOptions: { ecmaVersion: 8 }
+            code: "foo(a)",
+            options: ["always"]
+        },
+        {
+            code: "function foo(a) {}",
+            options: ["never"]
+        },
+        {
+            code: "foo(a)",
+            options: ["never"]
+        },
+        {
+            code: "function foo(a,\nb) {}",
+            options: ["always-multiline"]
+        },
+        {
+            code: "foo(a,\nb)",
+            options: ["always-multiline"]
+        },
+        {
+            code: "function foo(a,\nb) {}",
+            options: ["only-multiline"]
+        },
+        {
+            code: "foo(a,\nb)",
+            options: ["only-multiline"]
         },
         {
             code: "function foo(a) {}",
             options: ["always"],
-            parserOptions: { ecmaVersion: 8 }
+            parserOptions: { ecmaVersion: 7 }
         },
         {
             code: "foo(a)",
             options: ["always"],
+            parserOptions: { ecmaVersion: 7 }
+        },
+        {
+            code: "function foo(a) {}",
+            options: ["never"],
+            parserOptions: { ecmaVersion: 7 }
+        },
+        {
+            code: "foo(a)",
+            options: ["never"],
+            parserOptions: { ecmaVersion: 7 }
+        },
+        {
+            code: "function foo(a,\nb) {}",
+            options: ["always-multiline"],
+            parserOptions: { ecmaVersion: 7 }
+        },
+        {
+            code: "foo(a,\nb)",
+            options: ["always-multiline"],
+            parserOptions: { ecmaVersion: 7 }
+        },
+        {
+            code: "function foo(a,\nb) {}",
+            options: ["only-multiline"],
+            parserOptions: { ecmaVersion: 7 }
+        },
+        {
+            code: "foo(a,\nb)",
+            options: ["only-multiline"],
+            parserOptions: { ecmaVersion: 7 }
+        },
+        {
+            code: "function foo(a) {}",
+            options: ["never"],
             parserOptions: { ecmaVersion: 8 }
         },
         {
-            code: "function foo(\na,\nb\n) {}",
+            code: "foo(a)",
+            options: ["never"],
+            parserOptions: { ecmaVersion: 8 }
+        },
+        {
+            code: "function foo(a,) {}",
+            options: ["always"],
+            parserOptions: { ecmaVersion: 8 }
+        },
+        {
+            code: "foo(a,)",
+            options: ["always"],
+            parserOptions: { ecmaVersion: 8 }
+        },
+        {
+            code: "function foo(\na,\nb,\n) {}",
             options: ["always-multiline"],
             parserOptions: { ecmaVersion: 8 }
         },
@@ -270,22 +338,22 @@ ruleTester.run("comma-dangle", rule, {
             parserOptions: { ecmaVersion: 8 }
         },
         {
-            code: "function foo(a,b,) {}",
+            code: "function foo(a,b) {}",
             options: ["always-multiline"],
             parserOptions: { ecmaVersion: 8 }
         },
         {
-            code: "foo(a,b,)",
+            code: "foo(a,b)",
             options: ["always-multiline"],
             parserOptions: { ecmaVersion: 8 }
         },
         {
-            code: "function foo(a,b,) {}",
+            code: "function foo(a,b) {}",
             options: ["only-multiline"],
             parserOptions: { ecmaVersion: 8 }
         },
         {
-            code: "foo(a,b,)",
+            code: "foo(a,b)",
             options: ["only-multiline"],
             parserOptions: { ecmaVersion: 8 }
         },
@@ -315,6 +383,11 @@ ruleTester.run("comma-dangle", rule, {
             code: "foo(a,)",
             options: [{ functions: "always" }],
             parserOptions: { ecmaVersion: 8 }
+        },
+        {
+            code: "foo(a,)",
+            options: [{ functions: "always" }],
+            parserOptions: { ecmaVersion: 9 }
         },
         {
             code: "bar(...a,)",
@@ -413,7 +486,8 @@ ruleTester.run("comma-dangle", rule, {
                     messageId: "unexpected",
                     type: "Property",
                     line: 1,
-                    column: 23
+                    column: 23,
+                    endColumn: 24
                 }
             ]
         },
@@ -425,7 +499,8 @@ ruleTester.run("comma-dangle", rule, {
                     messageId: "unexpected",
                     type: "Property",
                     line: 2,
-                    column: 11
+                    column: 11,
+                    endColumn: 12
                 }
             ]
         },
@@ -566,7 +641,9 @@ ruleTester.run("comma-dangle", rule, {
                     messageId: "missing",
                     type: "Property",
                     line: 1,
-                    column: 23
+                    column: 23,
+                    endLine: 1,
+                    endColumn: 24
                 }
             ]
         },
@@ -579,7 +656,9 @@ ruleTester.run("comma-dangle", rule, {
                     messageId: "missing",
                     type: "Property",
                     line: 2,
-                    column: 11
+                    column: 11,
+                    endLine: 3,
+                    endColumn: 1
                 }
             ]
         },
@@ -592,7 +671,10 @@ ruleTester.run("comma-dangle", rule, {
                     messageId: "missing",
                     type: "Property",
                     line: 1,
-                    column: 30
+                    column: 30,
+                    endLine: 1,
+                    endColumn: 31
+
                 }
             ]
         },
@@ -605,7 +687,9 @@ ruleTester.run("comma-dangle", rule, {
                     messageId: "missing",
                     type: "Property",
                     line: 3,
-                    column: 12
+                    column: 12,
+                    endLine: 4,
+                    endColumn: 1
                 }
             ]
         },
@@ -619,6 +703,20 @@ ruleTester.run("comma-dangle", rule, {
                     type: "Literal",
                     line: 1,
                     column: 18
+                }
+            ]
+        },
+        {
+            code: "var foo = ['baz']",
+            output: "var foo = ['baz',]",
+            options: ["always"],
+            errors: [
+                {
+                    messageId: "missing",
+                    type: "Literal",
+                    line: 1,
+                    column: 17,
+                    endColumn: 18
                 }
             ]
         },
@@ -1283,6 +1381,208 @@ ruleTester.run("comma-dangle", rule, {
             options: [{ functions: "only-multiline" }],
             parserOptions: { ecmaVersion: 8 },
             errors: [{ messageId: "unexpected", type: "SpreadElement" }]
+        },
+        {
+            code: "function foo(a,) {}",
+            output: "function foo(a) {}",
+            options: ["never"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "Identifier" }]
+        },
+        {
+            code: "(function foo(a,) {})",
+            output: "(function foo(a) {})",
+            options: ["never"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "Identifier" }]
+        },
+        {
+            code: "(a,) => a",
+            output: "(a) => a",
+            options: ["never"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "Identifier" }]
+        },
+        {
+            code: "(a,) => (a)",
+            output: "(a) => (a)",
+            options: ["never"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "Identifier" }]
+        },
+        {
+            code: "({foo(a,) {}})",
+            output: "({foo(a) {}})",
+            options: ["never"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "Identifier" }]
+        },
+        {
+            code: "class A {foo(a,) {}}",
+            output: "class A {foo(a) {}}",
+            options: ["never"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "Identifier" }]
+        },
+        {
+            code: "foo(a,)",
+            output: "foo(a)",
+            options: ["never"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "Identifier" }]
+        },
+        {
+            code: "foo(...a,)",
+            output: "foo(...a)",
+            options: ["never"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "SpreadElement" }]
+        },
+
+        {
+            code: "function foo(a) {}",
+            output: "function foo(a,) {}",
+            options: ["always"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "missing", type: "Identifier" }]
+        },
+        {
+            code: "(function foo(a) {})",
+            output: "(function foo(a,) {})",
+            options: ["always"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "missing", type: "Identifier" }]
+        },
+        {
+            code: "(a) => a",
+            output: "(a,) => a",
+            options: ["always"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "missing", type: "Identifier" }]
+        },
+        {
+            code: "(a) => (a)",
+            output: "(a,) => (a)",
+            options: ["always"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "missing", type: "Identifier" }]
+        },
+        {
+            code: "({foo(a) {}})",
+            output: "({foo(a,) {},})",
+            options: ["always"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [
+                { messageId: "missing", type: "Identifier" },
+                { messageId: "missing", type: "Property" }
+            ]
+        },
+        {
+            code: "class A {foo(a) {}}",
+            output: "class A {foo(a,) {}}",
+            options: ["always"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "missing", type: "Identifier" }]
+        },
+        {
+            code: "foo(a)",
+            output: "foo(a,)",
+            options: ["always"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "missing", type: "Identifier" }]
+        },
+        {
+            code: "foo(...a)",
+            output: "foo(...a,)",
+            options: ["always"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "missing", type: "SpreadElement" }]
+        },
+
+        {
+            code: "function foo(a,) {}",
+            output: "function foo(a) {}",
+            options: ["always-multiline"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "Identifier" }]
+        },
+        {
+            code: "(function foo(a,) {})",
+            output: "(function foo(a) {})",
+            options: ["always-multiline"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "Identifier" }]
+        },
+        {
+            code: "foo(a,)",
+            output: "foo(a)",
+            options: ["always-multiline"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "Identifier" }]
+        },
+        {
+            code: "foo(...a,)",
+            output: "foo(...a)",
+            options: ["always-multiline"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "SpreadElement" }]
+        },
+        {
+            code: "function foo(\na,\nb\n) {}",
+            output: "function foo(\na,\nb,\n) {}",
+            options: ["always-multiline"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "missing", type: "Identifier" }]
+        },
+        {
+            code: "foo(\na,\nb\n)",
+            output: "foo(\na,\nb,\n)",
+            options: ["always-multiline"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "missing", type: "Identifier" }]
+        },
+        {
+            code: "foo(\n...a,\n...b\n)",
+            output: "foo(\n...a,\n...b,\n)",
+            options: ["always-multiline"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "missing", type: "SpreadElement" }]
+        },
+
+        {
+            code: "function foo(a,) {}",
+            output: "function foo(a) {}",
+            options: ["only-multiline"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "Identifier" }]
+        },
+        {
+            code: "(function foo(a,) {})",
+            output: "(function foo(a) {})",
+            options: ["only-multiline"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "Identifier" }]
+        },
+        {
+            code: "foo(a,)",
+            output: "foo(a)",
+            options: ["only-multiline"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "Identifier" }]
+        },
+        {
+            code: "foo(...a,)",
+            output: "foo(...a)",
+            options: ["only-multiline"],
+            parserOptions: { ecmaVersion: 8 },
+            errors: [{ messageId: "unexpected", type: "SpreadElement" }]
+        },
+        {
+            code: "function foo(a) {}",
+            output: "function foo(a,) {}",
+            options: ["always"],
+            parserOptions: { ecmaVersion: 9 },
+            errors: [{ messageId: "missing", type: "Identifier" }]
         },
 
         // separated options
